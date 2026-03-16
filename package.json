@@ -2,6 +2,7 @@
   "name": "use-agents",
   "version": "1.0.0",
   "description": "CLI tool for managing context files for agentic coding assistants.",
+  "repository": "https://github.com/scottmmjackson/use-agents",
   "main": "dist/index.js",
   "bin": {
     "use-agents": "dist/index.js"
