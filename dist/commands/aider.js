@@ -36,23 +36,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAiderConfigPath = getAiderConfigPath;
-exports.updateAiderConfig = updateAiderConfig;
-exports.aiderAction = aiderAction;
+exports.aiderAction = exports.updateAiderConfig = exports.getAiderConfigPath = void 0;
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const os = __importStar(require("os"));
 const chalk_1 = __importDefault(require("chalk"));
 const yaml = __importStar(require("js-yaml"));
-function getAiderConfigPath(isGlobal) {
+const getAiderConfigPath = (isGlobal) => {
     if (isGlobal) {
         return path.join(os.homedir(), '.aider.conf.yml');
     }
     else {
         return path.join(process.cwd(), '.aider.conf.yml');
     }
-}
-function updateAiderConfig(filePath, preferAgents, write) {
+};
+exports.getAiderConfigPath = getAiderConfigPath;
+const updateAiderConfig = (filePath, preferAgents, write) => {
     let config = {};
     if (fs.existsSync(filePath)) {
         try {
@@ -79,9 +78,11 @@ function updateAiderConfig(filePath, preferAgents, write) {
     fs.writeFileSync(filePath, yaml.dump(config));
     write(chalk_1.default.green(`Updated Aider config at ${filePath}`));
     write(chalk_1.default.blue(`Read files: ${Array.isArray(read) ? read.join(', ') : read}`));
-}
-function aiderAction(options) {
+};
+exports.updateAiderConfig = updateAiderConfig;
+const aiderAction = (options) => {
     const { isGlobal, preferAgents, writer } = options;
-    const filePath = getAiderConfigPath(!!isGlobal);
-    updateAiderConfig(filePath, !!preferAgents, writer);
-}
+    const filePath = (0, exports.getAiderConfigPath)(!!isGlobal);
+    (0, exports.updateAiderConfig)(filePath, !!preferAgents, writer);
+};
+exports.aiderAction = aiderAction;

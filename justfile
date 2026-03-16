@@ -29,4 +29,4 @@ clean:
 
 # Publish to NPM
 publish: build test lint
-    npm publish
+    npm publish --access public

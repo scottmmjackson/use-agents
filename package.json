@@ -1,12 +1,17 @@
 {
   "name": "use-agents",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "CLI tool for managing context files for agentic coding assistants.",
-  "repository": "https://github.com/scottmmjackson/use-agents",
+  "repository": {
+    "url": "git+https://github.com/scottmmjackson/use-agents.git"
+  },
   "main": "dist/index.js",
   "bin": {
     "use-agents": "dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "lint": "eslint 'src/**/*.ts' --fix",
@@ -37,6 +42,5 @@
     "ts-jest": "^29.1.2",
     "typescript": "^5.3.3",
     "typescript-eslint": "^8.57.0"
-  },
-  "private": true
+  }
 }

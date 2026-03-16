@@ -63,6 +63,8 @@ npx use-agents claude
 
 [EXPERIMENTAL] You can also use `npx use-agents claude -g` to install a hook that will load `AGENTS.md` automatically.
 
+> Credit for this belongs to [@clouatre](https://github.com/clouatre).
+
 ```bash
 # EXPERIMENTAL: USE WITH CAUTION AND BACK UP YOUR SETTINGS FIRST
 cp ~/.claude/settings.json ~/.claude/settings.json.bak

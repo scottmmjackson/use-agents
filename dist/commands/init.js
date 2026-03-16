@@ -36,8 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AGENTS_TEMPLATE = void 0;
-exports.initAction = initAction;
+exports.initAction = exports.AGENTS_TEMPLATE = void 0;
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const chalk_1 = __importDefault(require("chalk"));
@@ -61,7 +60,7 @@ TODO: Add build and test commands.
 
 TODO: Add coding guidelines.
 `;
-function initAction({ writer }) {
+const initAction = ({ writer }) => {
     const filePath = path.join(process.cwd(), 'AGENTS.md');
     if (fs.existsSync(filePath)) {
         writer(chalk_1.default.yellow('AGENTS.md already exists.'));
@@ -70,4 +69,5 @@ function initAction({ writer }) {
         fs.writeFileSync(filePath, exports.AGENTS_TEMPLATE);
         writer(chalk_1.default.green('Created AGENTS.md'));
     }
-}
+};
+exports.initAction = initAction;

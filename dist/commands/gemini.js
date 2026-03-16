@@ -36,22 +36,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getGeminiSettingsPath = getGeminiSettingsPath;
-exports.updateGeminiSettings = updateGeminiSettings;
-exports.geminiAction = geminiAction;
+exports.geminiAction = exports.updateGeminiSettings = exports.getGeminiSettingsPath = void 0;
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const os = __importStar(require("os"));
 const chalk_1 = __importDefault(require("chalk"));
-function getGeminiSettingsPath(isGlobal) {
+const getGeminiSettingsPath = (isGlobal) => {
     if (isGlobal) {
         return path.join(os.homedir(), '.gemini', 'settings.json');
     }
     else {
         return path.join(process.cwd(), '.gemini', 'settings.json');
     }
-}
-function updateGeminiSettings(filePath, preferAgents, writer) {
+};
+exports.getGeminiSettingsPath = getGeminiSettingsPath;
+const updateGeminiSettings = (filePath, preferAgents, writer) => {
     let settings = {};
     if (fs.existsSync(filePath)) {
         try {
@@ -64,7 +63,7 @@ function updateGeminiSettings(filePath, preferAgents, writer) {
     else {
         writer(chalk_1.default.yellow(`Creating ${filePath}...`));
     }
-    const { context: { fileName = ["GEMINI.md"] } = { filename: ["GEMINI.md"] } } = settings;
+    const { context: { fileName = ['GEMINI.md'] } = { filename: ['GEMINI.md'] } } = settings;
     if (fileName.includes('AGENTS.md')) {
         writer(chalk_1.default.yellow(`AGENTS.md already in context file order: [ ${fileName.join(', ')} ]`));
         writer(chalk_1.default.yellow('Skipping update.'));
@@ -91,8 +90,10 @@ function updateGeminiSettings(filePath, preferAgents, writer) {
     fs.writeFileSync(filePath, JSON.stringify(settings, null, 2));
     writer(chalk_1.default.green(`Updated Gemini settings at ${filePath}`));
     writer(chalk_1.default.green(`New context file order: [ ${fileName.join(', ')} ]`));
-}
-function geminiAction({ global = false, preferAgents = true, writer }) {
-    const filePath = getGeminiSettingsPath(!!global);
-    updateGeminiSettings(filePath, !!preferAgents, writer);
-}
+};
+exports.updateGeminiSettings = updateGeminiSettings;
+const geminiAction = ({ global = false, preferAgents = true, writer, }) => {
+    const filePath = (0, exports.getGeminiSettingsPath)(!!global);
+    (0, exports.updateGeminiSettings)(filePath, !!preferAgents, writer);
+};
+exports.geminiAction = geminiAction;

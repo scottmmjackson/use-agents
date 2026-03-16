@@ -36,7 +36,7 @@ program
 program
     .command('claude')
     .description('Setup workaround for Claude Code (symlink CLAUDE.md to AGENTS.md)')
-    .option('-g, --global', 'Configure global hook')
+    .option('-g, --global', 'Configure global hook (experimental)')
     .action(consoleWriter(claude_1.claudeAction));
 program
     .command('list')

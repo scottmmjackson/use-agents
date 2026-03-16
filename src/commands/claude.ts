@@ -170,6 +170,9 @@ if [ -f "$CLAUDE_FILE" ] && grep -q "@AGENTS.md" "$CLAUDE_FILE"; then exit 0; fi
 echo "=== Project AGENTS.md ==="
 cat "$AGENTS_FILE"`;
 
+/**
+ * This approach of creating a global hook is experimental but was found by https://github.com/clouatre.
+ */
 const configureClaudeGlobalHook = (writer: OutputWriter) => {
   const settingsPath = path.join(process.env.HOME || '', '.claude', 'settings.json');
   const settings: ClaudeCodeSettings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));

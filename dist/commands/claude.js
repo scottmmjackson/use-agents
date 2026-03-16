@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.claudeAction = claudeAction;
+exports.claudeAction = void 0;
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const chalk_1 = __importDefault(require("chalk"));
@@ -46,7 +46,7 @@ class AgentsNotFound extends Error {
         this.message = "AGENTS.md not found. Run 'use-agents init' first.";
     }
 }
-function claudeAction({ writer, global }) {
+const claudeAction = ({ writer, global }) => {
     if (global) {
         return configureClaudeGlobalHook(writer);
     }
@@ -81,7 +81,8 @@ function claudeAction({ writer, global }) {
             }
         }
     }
-}
+};
+exports.claudeAction = claudeAction;
 const loadAgentsMdScript = `#!/usr/bin/env bash
 set -euo pipefail
 AGENTS_FILE="\${CLAUDE_PROJECT_DIR}/AGENTS.md"
@@ -90,27 +91,39 @@ CLAUDE_FILE="\${CLAUDE_PROJECT_DIR}/CLAUDE.md"
 if [ -f "$CLAUDE_FILE" ] && grep -q "@AGENTS.md" "$CLAUDE_FILE"; then exit 0; fi
 echo "=== Project AGENTS.md ==="
 cat "$AGENTS_FILE"`;
-function configureClaudeGlobalHook(writer) {
+/**
+ * This approach of creating a global hook is experimental but was found by https://github.com/clouatre.
+ */
+const configureClaudeGlobalHook = (writer) => {
     var _a;
     const settingsPath = path.join(process.env.HOME || '', '.claude', 'settings.json');
     const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
-    const loadAgentsCommmand = { "type": "command", "command": "bash ~/.claude/hooks/load-agents-md.sh" };
+    const loadAgentsCommmand = {
+        type: 'command',
+        command: 'bash ~/.claude/hooks/load-agents-md.sh',
+    };
     writer(chalk_1.default.green(`Adding agent helper to SessionStart hook in ${settingsPath}`));
     if (!settings.hooks) {
         settings.hooks = {
-            SessionStart: [{ matcher: "*", hooks: [loadAgentsCommmand] }]
+            SessionStart: [{ matcher: '*', hooks: [loadAgentsCommmand] }],
         };
     }
     else if (!settings.hooks.SessionStart) {
-        settings.hooks.SessionStart = [{ matcher: "*", hooks: [loadAgentsCommmand] }];
+        settings.hooks.SessionStart = [{ matcher: '*', hooks: [loadAgentsCommmand] }];
     }
-    else if (settings.hooks.SessionStart.find(hook => hook.matcher === "*") !== undefined) {
-        (_a = settings.hooks.SessionStart.find(hook => hook.matcher === "*")) === null || _a === void 0 ? void 0 : _a.hooks.push(loadAgentsCommmand);
+    else if (settings.hooks.SessionStart.find((hook) => hook.matcher === '*') !== undefined) {
+        (_a = settings.hooks.SessionStart.find((hook) => hook.matcher === '*')) === null || _a === void 0 ? void 0 : _a.hooks.push(loadAgentsCommmand);
     }
     else {
-        settings.hooks.SessionStart.push({ matcher: "*", hooks: [loadAgentsCommmand] });
+        settings.hooks.SessionStart.push({ matcher: '*', hooks: [loadAgentsCommmand] });
     }
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+    writer(chalk_1.default.green(`Updated ${settingsPath}`));
     writer(chalk_1.default.green(`Creating agent helper in ~/.claude/hooks/load-agents-md.sh`));
     const hookPath = path.join(process.env.HOME || '', '.claude', 'hooks', 'load-agents-md.sh');
-    fs.statSync;
-}
+    fs.writeFileSync(hookPath, loadAgentsMdScript);
+    const { mode } = fs.statSync(hookPath);
+    fs.chmodSync(hookPath, mode | 0o111);
+    writer(chalk_1.default.green(`Updated ${hookPath}`));
+    writer(chalk_1.default.green(`Claude Code settings updated. Restart Claude Code to apply changes.`));
+};
